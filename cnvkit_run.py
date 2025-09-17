@@ -43,9 +43,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description = 'RUN')
     parser.add_argument('--model',default = "6.pth", type=str,
                         help='model name, The model needs to be in the folder ./save')
-    parser.add_argument('--run',default = "run_v11.3.py", type=str,
+    parser.add_argument('--run',default = "run_v11.8.py", type=str,
                         help='run flie name. default run_v11.3.py')
-    parser.add_argument('--limit',default = "0.95",type=str,
+    parser.add_argument('--limit',default = "0.9999",type=str,
                         help='parameter:strict，normal，relax. relax pattern can identify more but with less precision but strict pattern opposite.')
     args = parser.parse_args()
     model_name = args.model
@@ -60,6 +60,7 @@ if __name__ == '__main__':
     file_name = args.run
     limite = args.limit
     ###run long_segment pr
+    print(str(python_)+' '+str(file_name)+' --pattern long_segment --model '+str(model_name)+' --file_path .//cnvkit_do//fa --limit '+str(limite))
     cmd3 = os.system(str(python_)+' '+str(file_name)+' --pattern long_segment --model '+str(model_name)+' --file_path .//cnvkit_do//fa --limit '+str(limite))
 
 

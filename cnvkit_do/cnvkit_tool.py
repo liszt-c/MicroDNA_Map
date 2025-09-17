@@ -4,8 +4,8 @@ from glob import glob
 import argparse
 
 
-SeqName = 'SRR61569A'
-thread = '-p 10'
+SeqName = 'SRR22924935'
+thread = '-p 24'
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description = 'RUN')
     parser.add_argument('--thread',default = "-p 12", type=str,
