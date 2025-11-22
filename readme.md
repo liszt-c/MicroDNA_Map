@@ -1,132 +1,103 @@
-# MicroDNA Hook
+# MicroDNA Map
 
-### Folder structure
-
+# Installation
+We recommend installing via Conda with Python version 3.9.
 ``` 
--|datasets- |eccDNA	    #Insert the eccDNA sequence, .fa
- |		   |
- | 		   |otherDNA	#Put in other DNA sequences, .fa
- |
--|cnvkit_do- |out	#cnvkit output file
- |		    |
- | 		    |fa	# stored intermediate and result file 
- |
--|identify- |fatsa_to_identify	#Short sequence identification method default folder
- |		   |
- | 		   |long_segment_to_identify #Long sequence identification method default folder
- |
--|other_model- |transformer2.py #transformer model
- |		          |
- | 		          |resnet50.py
- |
- |ROC			#ROC output and image drawing folder
- |
--|run			#Training intermediate parameter storage folder
- |
--|save		    #Model storage folder
+# Create a Python environment
+conda create -n microdna python==3.9
+conda activate microdna
 
-### File
--|preprocessing-	|SamtoolBash.sh	#The bash command provides the samtools interface
- |			       |
- |			       |count*.py		#The xcel documentation is read and SamtoolBash.sh is called to cut the eccDNA sequence
- |			       |
- |			       |cout_other*.py	#Read the xcel documentation and call SamtoolBash.sh to cut other DNA sequences
- |
--|dataprocess*.py	#The DNA sequence was read and the sequence was converted to a matrix
- |
--|dataloader*.py	#The transformed matrices were read, datasets and dataloader were constructed by pytorch, and 20% were used as the test set
- |
--|ResNet_Attention.py	#Residual convolution model with attention mechanism
- |
--|ResAttention.py	#Network models of interspersed attention mechanisms
- |
--|train*.py		#Train and test
- |
--|run*.py		#User invocation interface
- |
--|cnvkit_run.py	#Methods for identification of eccDNA based on copy number variation
- |
--|verification.py	#Verification of accuracy
- |
-ps: * Refers to having multiple files or version numbers for different models
-```
-## Environment Configuration
-### Function Overview
-WGS data preprocessing (count*.py, SamtoolBash.sh)<br /> Model training (dataprocess.py, dataloader*.py, train_attention.py)<br /> Model validation (verification.py)<br /> Model invocation API (run.py)<br /> Extraction of MicroDNA based on CNVs (cnvkit_run.py)
-### Configuration Commands
-CUDA version > 11.7, or use another version of PyTorch.If python versions are not compatible, you may need to delete torch references from requirements.txt.<br />
-``` 
-conda/source activate/creat YOUR_ENV_NAME
+# Install dependencies
 pip install -r requirements.txt
+
+# Install PyTorch manually (version ≥ 1.8, CUDA ≥ 11.7 recommended)
+# Visit https://pytorch.org/get-started/previous-versions/ to select a suitable version
+conda install pytorch==2.2.1 torchvision==0.17.1 torchaudio==2.2.1 pytorch-cuda=12.1 -c pytorch -c nvidia
+
+# Install CNVkit (check https://github.com/etal/cnvkit for guidance)
+# Tip: Testing shows best compatibility with Python 3.9
+pip install cnvkit
 ``` 
-## Model Usage
-### Identifying MicroDNA from Custom Long Segments
-#### run.py command examples
-#Rapid identification of all .fa sequence files in the ./identify/long_segment_to_identify folder<br />
+
+# Quick Test
 ``` 
-conda activate pytorch
+conda activate YOUR_ENV_NAME
 cd YOUR_DIR_PATH
-python run.py --pattern long_segment 
+python run.py --pattern long_segment
 ``` 
-#### python run.py input parameters<br />
---pattern (required), specifies the running mode, short sequence or long segment, InputTypes: short_sequence, long_segment<br /> --model (optional), specifies the model name; model files are located in the './save/' folder<br /> --file_path (optional), specifies the directory containing files; if not specified, default folder's files will be used<br /> --manual_input (optional), manually input sequences<br /> --limit (optional), sensitivity threshold, default is 0.9<br />
-
-#The run.py file requires model files to be provided in .\save\ <br />
-#Trained model parameters are stored in the save folder and can also be specified via command line<br />
-#Default location for fa files is ./identify with two folders; this can be customized<br />
-#./identify/long_segment_to_identify - Place fa files here to automatically read and identify MicroDNA; results are saved in this folder<br />
-#./identify/fasta_to_identify - Folder for short sequence recognition mode result files<br />
-
-## Model Training
-### Data Preprocessing
-Based on NCBI experiments Series GSE68644, Series GSE124470<br /> https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE68644<br /> https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE124470<br /> Download GSE68644_RAW files and extract eccDNA sequence positions<br /> Use count*.py to obtain eccDNA sequences<br /> Use cout_other*.py to obtain otherDNA sequences<br />
-
-#Standard sequences: GSE68644 requires hg19 reference sequence, GSE124470 requires hg38 reference sequence, place them in the runtime path<br />
-Modification details can be found within the corresponding py files<br />
-
-### Training Commands
+This will automatically process .fa files in ./identify/long_segment_to_identify/to identify microDNAs and output results to the same directory. If the FASTA headers contain correct chromosomal positions, the results will include .bed localization files and .fasta sequence files.
 ``` 
-conda activate pytorch
-cd dir
-python train*.py
-``` 
-#train.py needs to invoke dataloader*.py, dataprocess*.py, and model files<br />
-#Training data is placed in the datasets directory<br />
-
-#### Analyzing training results using TensorBoard in the ./run folder
-``` 
-tensorboard --logdir=// --port 8130
+# View more options for run.py
+python run.py -h
 ``` 
 
-#### Verifying results with verification.py
-Developed based on train.py; place test data in the datasets directory<br /> Run the python file directly<br />
+# Starting from FASTQ Files
+
+1. Place hg19.fain the ./cnvkit_do directory.
+
+2. Place paired *.fastq1 and *.fastq2 files in ./cnvkit_do (these can be obtained from SRA files using fasterq-dump --split-3 *.sra).
+
+3. Run MicroDNA_Map_batch.py in the Conda environment with dependencies installed:
+``` 
+python MicroDNA_Map_batch.py
+``` 
+
+#### Pipeline Overview:
+Steps in cnvkit_tool.py:
+
+0. Glob all FASTQ files in ./cnvkit_do
+
+1. Check for the existence of the hg19.faindex; build it with Bowtie2 if missing
+
+2. Validate FASTQ file integrity
+
+3. Align FASTQ reads to the reference genome using Bowtie2
+
+4. Call CNVs using CNVkit
+
+Steps in cnvkit_run.py:
+
+0. Verify the completeness of previous step outputs
+
+1. Load CNVkit results
+
+2. Extract CNV segments using Samtools
+
+3. Execute run.pyfor microDNA identification
+
+Finally, results are consolidated and intermediate files are cleaned up.
+
+# Training
+### Data pre-processing
+Download *_RAWfiles from the NCBI GEO database to extract microDNA positional information.
+
+Use ./preprocessing/count*.py to extract eccDNA sequences and ./preprocessing/count_other*.py for otherDNA sequences. These scripts call SamtoolBash.sh to perform sequence segmentation.
+
+Note: Datasets may vary in format. Manually adjust preprocessing script parameters as needed.
+
+### model training
+1. Place data in the ./datasetsdirectory
+
+2. Adjust training parameters in train.py(e.g., epochs, learning rate scheduler)
+
+3. Run the training script:
+``` 
+python train.py
+``` 
+### Independent Testing
+Place test data in ./datasets, then run the following to obtain evaluation metrics:
 ``` 
 python verification.py
 ``` 
-#### Drawing ROC curves using ROC_draw.py
-Post-training ROC data is located in the ROC folder<br /> Run the python file directly<br />
+Generate ROC curves with:
 ``` 
 python ROC_draw.py
 ``` 
-## MicroDNA Identification Based on CNVs Regions
-#### Required Data
-WGS sequencing data files (can be SRA files .sra or fastq files .fq), hg19 standard sequence<br /> hg19.fa (from NCBI) and alignment reference files provided by CNVkit<br /> hg19_cnvkit_filtered_ref.cnn (from CNVkit) should be placed in the MicroDNA_Hook\cnvkit\cnvkit_do folder<br />
+<br />
+<br />
 
-tip: CNVkit may have issues when invoked in Windows 11 systems or Windows Subsystem for Linux. Please refer to CNVkit usage instructions. After calculation, place the resulting result.call.cns file in MicroDNA_Hook\cnvkit_do\out and continue to run cnvkit_run.py.<br />
-If you start with fastq data, you need to install bowtie2. If you start with sra data, you need to install sra tools.<br />
-#### Command to Identify MicroDNA in CNVs Regions
-``` 
-python cnvkit_run.py
-``` 
---model (optional), specifies the model name; model files are located in './save/', default is module.pth.<br /> --run (optional), specifies the version to be called, default is run_v11.2.py.<br /> --limit (optional), sensitivity threshold, default is 0.95<br />
 
-#### Merging Results for Further Analysis
-``` 
-python merge_file.py
-``` 
-#File Description: glob traverses all .txt files in cnvkit_do\fa, writes into cnvkit_do\connect folder<br />
+#### Additional Notes
+./Additional_toolscontains bioinformatics utilities, but the code was not designed for general use and is provided for reference only.
 
-## Model Description
-1. ResNet_Attention.py # Residual convolutional model with attention mechanism<br /> Used in the undergraduate thesis "eccDNA Identification based on Deep Learning"; works with module.pth.<br />
-2. ResAttention.py # Network model with interleaved attention mechanism<br /> Performs better and should be used with 6.pth; modify import code in run.py accordingly.<br />
-3. Transformer models have been tested but are not suitable for this task due to either insufficient data volume or low information density per sample, as detailed in the paper.<br />
+./other_modelincludes experimental model implementations; review the code carefully before use.

@@ -85,10 +85,6 @@ termcolor==2.3.0
 thop==0.1.1.post2209072238
 tokenizers==0.13.3
 toolz==0.12.0
-torch==2.0.0+cu118
-torchaudio==2.0.1+cu118
-torchsummary==1.5.1
-torchvision==0.15.1+cu118
 tqdm==4.65.0
 transformers==4.30.2
 typing_extensions==4.7.1
