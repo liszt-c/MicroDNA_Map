@@ -65,7 +65,7 @@ Steps in cnvkit_run.py:
 
 2. Extract CNV segments using Samtools
 
-3. Execute run.pyfor microDNA identification
+3. Execute run.py for microDNA identification
 
 Finally, results are consolidated and intermediate files are cleaned up.
 
@@ -80,7 +80,7 @@ Note: Datasets may vary in format. Manually adjust preprocessing script paramete
 ### model training
 1. Place data in the ./datasetsdirectory
 
-2. Adjust training parameters in train.py(e.g., epochs, learning rate scheduler)
+2. Adjust training parameters in train.py (e.g., epochs, learning rate scheduler)
 
 3. Run the training script:
 ``` 
