@@ -43,7 +43,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description = 'RUN')
     parser.add_argument('--model',default = "6.pth", type=str,
                         help='model name, The model needs to be in the folder ./save')
-    parser.add_argument('--run',default = "run_v11.8.py", type=str,
+    parser.add_argument('--run',default = "run.py", type=str,
                         help='run flie name. default run_v11.3.py')
     parser.add_argument('--limit',default = "0.9999",type=str,
                         help='parameter:strict，normal，relax. relax pattern can identify more but with less precision but strict pattern opposite.')
