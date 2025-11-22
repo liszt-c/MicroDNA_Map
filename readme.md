@@ -43,6 +43,8 @@ python MicroDNA_Map_batch.py
 ``` 
 
 #### Pipeline of MicroDNA_Map_batch.py Overview:
+Check the integrity of the files
+
 Steps in cnvkit_tool.py:
 
 0. Glob all FASTQ files in ./cnvkit_do
