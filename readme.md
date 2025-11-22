@@ -68,6 +68,7 @@ Steps in cnvkit_run.py:
 3. Execute run.py for microDNA identification
 
 Finally, results are consolidated and intermediate files are cleaned up.
+Note that the fastq files will be deleted after the operation is completed.
 
 # Training
 ### Data pre-processing
