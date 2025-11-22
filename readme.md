@@ -42,7 +42,7 @@ python run.py -h
 python MicroDNA_Map_batch.py
 ``` 
 
-#### Pipeline Overview:
+#### Pipeline of MicroDNA_Map_batch.py Overview:
 Steps in cnvkit_tool.py:
 
 0. Glob all FASTQ files in ./cnvkit_do
