@@ -37,7 +37,7 @@ if __name__ == '__main__':
     parser.add_argument('--o',default = "./save", type=str,help='output dir.')
     args = parser.parse_args()
 
-    model = ResNetSelfAttention(in_channels=4)
+    model = ResNetSelfAttention()
     train_data = train_dataloader
     loss_method = torch.nn.CrossEntropyLoss()
     #loss_method = torch.nn.BCEWithLogitsLoss()                  ###v6更换损失函数
