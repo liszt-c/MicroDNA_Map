@@ -4,7 +4,7 @@
 #3.读出来的数据进模型跑，像test中的一样
 
 '''
-1.dataprocess、dataloader原样，文件夹中只有eccDNA，测试准确率
+1.dataprocess、dataloader原样，测试准确率
 2.取训练模块中测试集的部分代码，作为验证
 '''
 import torch
@@ -30,7 +30,7 @@ THRESHOLD = 0.5
 ###部署模型
 from ResAttention import ResNetSelfAttention
 model = ResNetSelfAttention()
-#from ResNet_Attention_v126 import ResNetAttention
+#from ResNet_Attention_v126 import ResNetAttention  # for Other Model
 #model = ResNetAttention()
 model_name = './save/'+str(version)+'.pth'
 
