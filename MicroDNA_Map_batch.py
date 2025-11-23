@@ -140,7 +140,7 @@ def merge_bed_files(base_name, cnvkit_dir):
 
 def delete_intermediate_files(base, fastq1, fastq2, cnvkit_dir):
     """删除中间文件（fastq和bam）"""
-    '''
+    
     # 删除fastq文件
     for fq in [fastq1, fastq2]:
         if os.path.exists(fq):
@@ -149,7 +149,6 @@ def delete_intermediate_files(base, fastq1, fastq2, cnvkit_dir):
                 print(f"已删除: {fq}")
             except Exception as e:
                 print(f"删除 {fq} 失败: {e}")
-    '''
     
     # 删除bam文件及其索引
     bam_files = [
