@@ -33,7 +33,7 @@ python run.py -h
 
 # Starting from FASTQ Files
 
-1. Place hg19.fain the ./cnvkit_do directory.
+1. Place hg19.fa in the ./cnvkit_do directory.
 
 2. Place paired *.fastq1 and *.fastq2 files in ./cnvkit_do (these can be obtained from SRA files using fasterq-dump --split-3 *.sra).
 
@@ -49,7 +49,7 @@ Steps in cnvkit_tool.py:
 
 0. Glob all FASTQ files in ./cnvkit_do
 
-1. Check for the existence of the hg19.faindex; build it with Bowtie2 if missing
+1. Check for the existence of the hg19.fa index; build it with Bowtie2 if missing
 
 2. Validate FASTQ file integrity
 
@@ -79,7 +79,7 @@ Use ./preprocessing/count*.py to extract eccDNA sequences and ./preprocessing/co
 Note: Datasets may vary in format. Manually adjust preprocessing script parameters as needed.
 
 ### model training
-1. Place data in the ./datasetsdirectory
+1. Place data in the ./datasets directory
 
 2. Adjust training parameters in train.py (e.g., epochs, learning rate scheduler)
 
